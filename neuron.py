@@ -20,9 +20,10 @@ class IzhikevichNeuron(object):
         self.final_spike_time = 0.0
 
         self.oscilloscopes = []
+        self.has_prespiking = False
 
     # can be seen on: https://www.izhikevich.org/publications/spikes.htm
-    def izhi_equs(self, t, x):
+    def izhikevich_equs(self, t, x):
         v, u = x
         dv = 0.04 * v*v + 5 * v + 140 - u - self.get_current(t, v)
         du = self._a * (self._b * v - u)
@@ -42,13 +43,13 @@ class IzhikevichNeuron(object):
         current += g_nmda * v * tmp / (1 + tmp)
         return current
 
-    # integrate using rk45
+    # one step iteration using 4th-order Runge-Kutta method
     def one_step_rk45(self, x, t, dt):
         halfdt = dt * 0.5
-        k1 = self.izhi_equs(t, x)
-        k2 = self.izhi_equs(t + halfdt, x + halfdt * k1)
-        k3 = self.izhi_equs(t + halfdt, x + halfdt * k2)
-        k4 = self.izhi_equs(t + dt, x + dt * k3)
+        k1 = self.izhikevich_equs(t, x)
+        k2 = self.izhikevich_equs(t + halfdt, x + halfdt * k1)
+        k3 = self.izhikevich_equs(t + halfdt, x + halfdt * k2)
+        k4 = self.izhikevich_equs(t + dt, x + dt * k3)
         x = x + (k1 + 2 * k2 + 2 * k3 + k4) * dt / 6
         return x
     
@@ -57,7 +58,7 @@ class IzhikevichNeuron(object):
         dt = self.time_step
 
         for _ in range(steps):
-            callback(self, t, dt)
+            self.has_prespiking = callback(self, t, dt)        # presynaptic spiking
             dt = self.time_step
             x = self.one_step_rk45(self.status, t, dt)
 
@@ -67,11 +68,12 @@ class IzhikevichNeuron(object):
 
             self.status = x
             t += dt
-            self.record_to_oscilloscopes(t)     # Observer Pattern: treat oscilloscopes as observers
+            self.record_to_oscilloscopes(t, dt)     # Observer Pattern: treat oscilloscopes as observers
 
             if is_over_threshold:
                 self.repolarize()
     
+    # TODO
     def fire(self):
         pass
     
@@ -88,6 +90,6 @@ class IzhikevichNeuron(object):
     def attach(self, osc):
         self.oscilloscopes.append(osc)
 
-    def record_to_oscilloscopes(self, t):
+    def record_to_oscilloscopes(self, t, dt):
         for osc in self.oscilloscopes:
-            osc.sampling(t)
+            osc.sampling(t, dt)
