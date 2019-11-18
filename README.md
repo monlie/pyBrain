@@ -6,7 +6,7 @@ A multi-model-supporting framework implemented in Python for SNN simulating.
 
 ## Background
 
-A brief introduction to SNN can be seen here: [INTRODUCTION (Chinese version)](https://)
+A brief introduction to SNN can be seen here: [INTRODUCTION (Chinese version)](https://github.com/monlie/pyBrain/blob/master/SNN.pdf)
 
 ## Supported/Supporting Features
 
