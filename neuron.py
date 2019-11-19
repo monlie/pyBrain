@@ -1,5 +1,5 @@
 import numpy as np
-from math import exp
+from math import exp, cos
 from random import random
 import synapse
 from oscilloscope import Recordable
@@ -7,12 +7,11 @@ from oscilloscope import Recordable
 
 class Neuron(Recordable):
 
-    def __init__(self, status=None, ts=5e-2):
+    def __init__(self, status=None):
         super(Neuron, self).__init__()
 
         self.status = status
-        self.time_stamp = None
-        self.time_step = ts      
+        self.time_stamp = None 
         self.presynapses = []
         self.postsynapses = []
 
@@ -38,10 +37,10 @@ class Neuron(Recordable):
 
 class IzhikevichNeuron(Neuron):
     
-    def __init__(self, status=None, ts=5e-2, a=0.02, b=0.2, c=-65.0, d=8.0):
+    def __init__(self, status=None, a=0.02, b=0.2, c=-65.0, d=2.0):
         if status is None:
             status = np.array([-70.0, -14.0], dtype=np.float64)
-        super(IzhikevichNeuron, self).__init__(status, ts)
+        super(IzhikevichNeuron, self).__init__(status)
 
         self._a = a
         self._b = b
@@ -59,3 +58,20 @@ class IzhikevichNeuron(Neuron):
     def reset(self):
         self.status[0] = self._c
         self.status[1] += self._d
+
+
+class TestNeuron(Neuron):
+    
+    def __init__(self, status=None):
+        if status is None:
+            status = np.array([0, 0], dtype=np.float64)
+        super(TestNeuron, self).__init__(status)
+
+    # dx / dt = cos(x)
+    def dynamic_equ(self, t, x):
+        v, u = x
+        return np.array([exp(v), 0], dtype=np.float64)
+
+    # TODO: just for test
+    def total_current(self, t, v):
+        return 0

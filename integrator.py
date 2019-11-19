@@ -48,3 +48,14 @@ class Integrator(object):
 
             if is_over_threshold:
                 self.neurons.reset()
+
+
+class EulerIntegrator(Integrator):
+
+    def __init__(self, neu, ts=0.05):
+        super().__init__(neu, ts=ts)
+
+    @staticmethod
+    def one_step_rk45(neu, x, t, dt):
+        print(x, dt)
+        return x + dt * neu.dynamic_equ(t, x)
