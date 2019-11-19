@@ -1,19 +1,22 @@
 import numpy as np
 from math import exp
+from oscilloscope import Recordable
 
 
 """
 Observer Pattern: treat synapses as observers, and presynaptic neurons as subjects.
 REMEMBER: SUBJECTS MUST BE PRE-NEURONS!
 """
-class ChemicalSynapse(object):
+class ChemicalSynapse(Recordable):
 
     # formulas could be seen on: https://www.ncbi.nlm.nih.gov/pubmed/15142958
     def __init__(self, preneuron, ampa, nmda):
+        super(ChemicalSynapse, self).__init__()
+
         self.preneuron = preneuron
         self.g_ampa = ampa
         self.g_nmda = nmda
-        self.final_spike_time = -100.0
+        self.final_spike_time = -200.0
 
     """
     Receptors could be further abstracted as classes, but at the same time 
@@ -32,3 +35,4 @@ class ChemicalSynapse(object):
 
     def simulate(self, t):
         self.final_spike_time = t
+        self.record_to_oscilloscopes(t)

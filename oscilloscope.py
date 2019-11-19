@@ -2,50 +2,68 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+class Recordable(object):
+
+    def __init__(self):
+        self.oscilloscopes = []
+    
+    def attach(self, osc):
+        self.oscilloscopes.append(osc)
+
+    def record_to_oscilloscopes(self, t):
+        for osc in self.oscilloscopes:
+            osc.sampling(t)
+
+
 # Observer Pattern: treat oscilloscopes as observers
 class Oscilloscope(object):
 
-    def __init__(self, neuron):
-        self.target = neuron
+    def __init__(self, target):
+        self.target = target
         self.sample = []
-        neuron.attach(self)
+        target.attach(self)
 
     def reboot(self):
         self.sample = []
 
-    def sampling(self, t, dt):
+    def sampling(self, t):
         return
 
     def get_sample(self):
-        return zip(*self.sample)
+        return list(zip(*self.sample))
 
-    def display(self, fig, as_scatter=False, **keyargs):
-        t, x = self.get_sample()
-        if as_scatter:
-            plt.scatter(t, x, **keyargs)
-        else:
+    def display(self, fig, **keyargs):
+        sample = self.get_sample()
+        if sample:
+            t, x = sample
             plt.plot(t, x, **keyargs)
         return fig
 
     
 class VoltageOscilloscope(Oscilloscope):
 
-    def sampling(self, t, dt):
+    def sampling(self, t):
         self.sample.append((t, self.target.status[0]))
 
-    def display(self, fig, as_scatter=False, **keyargs):
-        fig = super(VoltageOscilloscope, self).display(fig, as_scatter, **keyargs)
+    # override
+    def display(self, fig, **keyargs):
+        fig = super(VoltageOscilloscope, self).display(fig, **keyargs)
         plt.xlabel(r"$t\ [ms]$")
         plt.ylabel(r"$V\ [mV]$")
         return fig
 
 
-class PreSpikingOscilloscope(VoltageOscilloscope):
+class SpikingOscilloscope(Oscilloscope):
 
-    def sampling(self, t, dt):
-        if self.target.has_prespiking:
-            self.sample.append((t - dt, 30))
+    def sampling(self, t):
+        self.sample.append((t, 30))
     
+    # override
     def display(self, fig, **keyargs):
-        fig = super(PreSpikingOscilloscope, self).display(fig, True, **keyargs)
+        sample = self.get_sample()
+        if sample:
+            t, x = sample
+            plt.scatter(t, x, **keyargs)
+            plt.xlabel(r"$t\ [ms]$")
+            plt.ylabel(r"$V\ [mV]$")
         return fig
