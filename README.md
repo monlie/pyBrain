@@ -8,7 +8,7 @@ A multi-model-supporting framework implemented in Python for SNN simulating.
 
 A brief introduction to SNN can be seen here: [INTRODUCTION (Chinese version)](https://github.com/monlie/pyBrain/blob/master/SNN.pdf)
 
-## Supported/Supporting Features
+## Supported / Supporting Features
 
 ### Neuron Models
 
@@ -24,7 +24,7 @@ A brief introduction to SNN can be seen here: [INTRODUCTION (Chinese version)](h
 - [ ] GABA_B receptor
 - [x] electrical synapse
 
-### Simulation Methods
+### Simulation Methods (Integrators)
 
 - [x] clock-driven method with high precision spiking time searching
 - [ ] voltage-driven: the best method so far
