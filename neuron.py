@@ -1,6 +1,7 @@
 import numpy as np
 from math import exp
 from random import random
+import synapse
 
 
 class IzhikevichNeuron(object):
@@ -15,33 +16,25 @@ class IzhikevichNeuron(object):
         self._c = c
         self._d = d
         
-        self.g_ampa = 0.0
-        self.g_nmda = 0.0
-        self.final_spike_time = 0.0
+        self.presynapses = []
+        self.postsynapses = []
 
         self.oscilloscopes = []
-        self.has_prespiking = False
 
     # can be seen on: https://www.izhikevich.org/publications/spikes.htm
     def izhikevich_equs(self, t, x):
         v, u = x
-        dv = 0.04 * v*v + 5 * v + 140 - u - self.get_current(t, v)
+        dv = 0.04 * v*v + 5 * v + 140 - u - self.total_current(t, v)
         du = self._a * (self._b * v - u)
         return np.array([dv, du], dtype=np.float64)
     
-    def repolarize(self):
+    # repolarization
+    def reset(self):
         self.status[0] = self._c
         self.status[1] += self._d
         
-    def get_current(self, t, v):
-        t = t - self.final_spike_time
-        g_ampa = self.g_ampa * exp(-t * 0.2)    # g' = -g / 5
-        g_nmda = self.g_nmda * exp(-t * 0.006667)  # g' = -g / 150
-        current = g_ampa * v        # g_ampa (v - 0)
-        tmp = (v + 80) / 60
-        tmp *= tmp
-        current += g_nmda * v * tmp / (1 + tmp)
-        return current
+    def total_current(self, t, v):
+        return sum([syn.get_current(t, v) for syn in self.presynapses])
 
     # one step iteration using 4th-order Runge-Kutta method
     def one_step_rk45(self, x, t, dt):
@@ -58,7 +51,7 @@ class IzhikevichNeuron(object):
         dt = self.time_step
 
         for _ in range(steps):
-            self.has_prespiking = callback(self, t, dt)        # presynaptic spiking
+            callback(self, t, dt)                   # presynaptic spiking
             dt = self.time_step
             x = self.one_step_rk45(self.status, t, dt)
 
@@ -71,11 +64,11 @@ class IzhikevichNeuron(object):
             self.record_to_oscilloscopes(t, dt)     # Observer Pattern: treat oscilloscopes as observers
 
             if is_over_threshold:
-                self.repolarize()
-    
-    # TODO
-    def fire(self):
-        pass
+                self.reset()
+
+    def fire(self, t):
+        for syn in self.postsynapses:
+            syn.simulate(t)
     
     # binary search the precise time of spiking
     def search_t(self, t, ldt, rdt):
@@ -93,3 +86,8 @@ class IzhikevichNeuron(object):
     def record_to_oscilloscopes(self, t, dt):
         for osc in self.oscilloscopes:
             osc.sampling(t, dt)
+
+    def link_with(self, post_neuron):
+        syn = synapse.ChemicalSynapse(self, 0.4, 0.4)
+        self.postsynapses.append(syn)
+        post_neuron.presynapses.append(syn)
