@@ -29,16 +29,17 @@ class Integrator(object):
             return cls.search_t(neu, t, dt, rdt)
         return x, dt
 
-    def integrate(self, steps=1000, callback=lambda _neuron, _t, _dt : None):
+    def integrate(self, steps=1000, callback=None):
         t = 0.0
         dt = self.time_step
 
         for _ in range(steps):
-            callback(self.neurons, t, dt)                   # presynaptic spiking
+            if callback is not None:
+                callback(self.neurons, t, dt)                   # presynaptic spiking
             dt = self.time_step
             x = self.one_step_rk45(self.neurons, self.neurons.status, t, dt)
 
-            is_over_threshold = x[0] >= 30
+            is_over_threshold = self.neurons.is_over_threshold(x[0])
             if is_over_threshold:
                 x, dt = self.search_t(self.neurons, t, 0, dt)
 
@@ -57,5 +58,4 @@ class EulerIntegrator(Integrator):
 
     @staticmethod
     def one_step_rk45(neu, x, t, dt):
-        print(x, dt)
         return x + dt * neu.dynamic_equ(t, x)

@@ -7,23 +7,30 @@ from oscilloscope import Recordable
 
 class Neuron(Recordable):
 
-    def __init__(self, status=None):
+    def __init__(self, status=None, stimulation=None):
         super(Neuron, self).__init__()
 
         self.status = status
+        self.stimulation = stimulation
         self.time_stamp = None 
         self.presynapses = []
         self.postsynapses = []
 
     # dynamic equations: dx/dt = f(t, x), wherein x is status of the neuron
     def dynamic_equ(self, t, x):
-        return x
+        raise NotImplementedError
+
+    def is_over_threshold(self, v):
+        return False
     
     def reset(self):
-        pass
+        return
         
     def total_current(self, t, v):
-        return sum([syn.get_current(t, v) for syn in self.presynapses])
+        current = sum([syn.get_current(t, v) for syn in self.presynapses])
+        if self.stimulation is not None:
+            current += self.stimulation(t)
+        return current
 
     def fire(self, t):
         for syn in self.postsynapses:
@@ -37,10 +44,10 @@ class Neuron(Recordable):
 
 class IzhikevichNeuron(Neuron):
     
-    def __init__(self, status=None, a=0.02, b=0.2, c=-65.0, d=2.0):
+    def __init__(self, status=None, stimulation=None, a=0.02, b=0.2, c=-65.0, d=8.0):
         if status is None:
             status = np.array([-70.0, -14.0], dtype=np.float64)
-        super(IzhikevichNeuron, self).__init__(status)
+        super(IzhikevichNeuron, self).__init__(status, stimulation)
 
         self._a = a
         self._b = b
@@ -59,19 +66,32 @@ class IzhikevichNeuron(Neuron):
         self.status[0] = self._c
         self.status[1] += self._d
 
+    def is_over_threshold(self, v):
+        return v >= 30
 
-class TestNeuron(Neuron):
+
+# TODO: just used for test the integrator
+class _TestNeuron(Neuron):
     
     def __init__(self, status=None):
         if status is None:
             status = np.array([0, 0], dtype=np.float64)
-        super(TestNeuron, self).__init__(status)
+        super(_TestNeuron, self).__init__(status)
 
-    # dx / dt = cos(x)
+    # dx / dt = x, the solution should be x(t) = c * exp(t)
     def dynamic_equ(self, t, x):
         v, u = x
-        return np.array([exp(v), 0], dtype=np.float64)
+        return np.array([v, 0], dtype=np.float64)
 
-    # TODO: just for test
-    def total_current(self, t, v):
-        return 0
+
+# Factory Pattern
+class NeuronFactory(object):
+
+    _neurons = {"RS": {}, 
+                "IB": {"c": -55.0, "d": 4.0},
+                "CH": {"c": -50.0, "d": 2.0}}
+
+    def __new__(cls, ntype, stim=None):
+        paras = cls._neurons.get(ntype)
+        if ntype is not None:
+            return IzhikevichNeuron(stimulation=stim, **paras)
