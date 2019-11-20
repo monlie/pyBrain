@@ -1,6 +1,3 @@
-import numpy as np
-
-
 class Integrator(object):
 
     def __init__(self, neu, ts=5e-2):

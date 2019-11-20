@@ -1,7 +1,6 @@
-import numpy as np
 from math import exp
-from oscilloscope import Recordable
-from ctools.ccctest import TimeManager
+from Oscilloscopes import Recordable
+from ctools import TimeManager
 
 
 """

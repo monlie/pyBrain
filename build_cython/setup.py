@@ -9,4 +9,4 @@ from distutils.core import setup
 
 from Cython.Build import cythonize
 
-setup(ext_modules=cythonize("ccctest.pyx"))
+setup(ext_modules=cythonize("ctools/ccctest.pyx"))

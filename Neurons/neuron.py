@@ -1,8 +1,6 @@
 import numpy as np
-from math import exp, cos
-from random import random
-import synapse
-from oscilloscope import Recordable
+from Synapses import synapse
+from Oscilloscopes import Recordable
 
 
 class Neuron(Recordable):
