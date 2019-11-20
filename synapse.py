@@ -1,6 +1,7 @@
 import numpy as np
 from math import exp
 from oscilloscope import Recordable
+from queue import PriorityQueue
 
 
 """
@@ -17,6 +18,7 @@ class ChemicalSynapse(Recordable):
         self.g_ampa = ampa
         self.g_nmda = nmda
         self.final_spike_time = -200.0
+        self.spike_time_queue = PriorityQueue()
 
     """
     Receptors could be further abstracted as classes, but at the same time 

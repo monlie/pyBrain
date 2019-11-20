@@ -95,3 +95,9 @@ class NeuronFactory(object):
         paras = cls._neurons.get(ntype)
         if ntype is not None:
             return IzhikevichNeuron(stimulation=stim, **paras)
+
+
+class PoissonEncoder(object):
+
+    def __init__(self):
+        super().__init__()
