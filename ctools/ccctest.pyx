@@ -10,20 +10,20 @@ cdef class TimeManager:
         self.cur_time = t
         self.time_queue = new priority_queue[double]()
 
-    def __dealloc(self):
+    def __dealloc__(self):
         del self.time_queue
 
     def add_simulation(self, double t):
         if t < self.cur_time:
             raise ValueError("you cannot travel to the past bro")
-        self.time_queue.push(t)
+        self.time_queue.push(-t)
 
     def get_time_difference(self, double t):
         if t < self.cur_time:
             raise ValueError("you cannot travel to the past bro")
         if self.time_queue.empty():
             return t - self.cur_time
-        cdef double top = self.time_queue.top()
+        cdef double top = -self.time_queue.top()
         return t - self.cur_time if t < top else t - top
 
     def update(self, double t):
@@ -31,7 +31,7 @@ cdef class TimeManager:
             raise ValueError("you cannot travel to the past bro")
         cdef double top
         if not self.time_queue.empty():
-            top = self.time_queue.top()
+            top = -self.time_queue.top()
             if t >= top:
                 self.time_queue.pop()
                 self.cur_time = top

@@ -1171,7 +1171,7 @@ static PyObject *__pyx_n_s_t;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_kp_s_you_cannot_travel_to_the_past_br;
 static int __pyx_pf_6ctools_7ccctest_11TimeManager___cinit__(struct __pyx_obj_6ctools_7ccctest_TimeManager *__pyx_v_self, double __pyx_v_t); /* proto */
-static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_2__dealloc(struct __pyx_obj_6ctools_7ccctest_TimeManager *__pyx_v_self); /* proto */
+static void __pyx_pf_6ctools_7ccctest_11TimeManager_2__dealloc__(struct __pyx_obj_6ctools_7ccctest_TimeManager *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_4add_simulation(struct __pyx_obj_6ctools_7ccctest_TimeManager *__pyx_v_self, double __pyx_v_t); /* proto */
 static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_6get_time_difference(struct __pyx_obj_6ctools_7ccctest_TimeManager *__pyx_v_self, double __pyx_v_t); /* proto */
 static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_8update(struct __pyx_obj_6ctools_7ccctest_TimeManager *__pyx_v_self, double __pyx_v_t); /* proto */
@@ -1270,7 +1270,7 @@ static int __pyx_pf_6ctools_7ccctest_11TimeManager___cinit__(struct __pyx_obj_6c
  *         self.cur_time = t
  *         self.time_queue = new priority_queue[double]()             # <<<<<<<<<<<<<<
  * 
- *     def __dealloc(self):
+ *     def __dealloc__(self):
  */
   try {
     __pyx_t_1 = new std::priority_queue<double> ();
@@ -1302,32 +1302,29 @@ static int __pyx_pf_6ctools_7ccctest_11TimeManager___cinit__(struct __pyx_obj_6c
 /* "ctools/ccctest.pyx":13
  *         self.time_queue = new priority_queue[double]()
  * 
- *     def __dealloc(self):             # <<<<<<<<<<<<<<
+ *     def __dealloc__(self):             # <<<<<<<<<<<<<<
  *         del self.time_queue
  * 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_6ctools_7ccctest_11TimeManager_3__dealloc(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_6ctools_7ccctest_11TimeManager_3__dealloc(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
+static void __pyx_pw_6ctools_7ccctest_11TimeManager_3__dealloc__(PyObject *__pyx_v_self); /*proto*/
+static void __pyx_pw_6ctools_7ccctest_11TimeManager_3__dealloc__(PyObject *__pyx_v_self) {
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__dealloc (wrapper)", 0);
-  __pyx_r = __pyx_pf_6ctools_7ccctest_11TimeManager_2__dealloc(((struct __pyx_obj_6ctools_7ccctest_TimeManager *)__pyx_v_self));
+  __Pyx_RefNannySetupContext("__dealloc__ (wrapper)", 0);
+  __pyx_pf_6ctools_7ccctest_11TimeManager_2__dealloc__(((struct __pyx_obj_6ctools_7ccctest_TimeManager *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
-  return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_2__dealloc(struct __pyx_obj_6ctools_7ccctest_TimeManager *__pyx_v_self) {
-  PyObject *__pyx_r = NULL;
+static void __pyx_pf_6ctools_7ccctest_11TimeManager_2__dealloc__(struct __pyx_obj_6ctools_7ccctest_TimeManager *__pyx_v_self) {
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("__dealloc", 0);
+  __Pyx_RefNannySetupContext("__dealloc__", 0);
 
   /* "ctools/ccctest.pyx":14
  * 
- *     def __dealloc(self):
+ *     def __dealloc__(self):
  *         del self.time_queue             # <<<<<<<<<<<<<<
  * 
  *     def add_simulation(self, double t):
@@ -1337,16 +1334,13 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_2__dealloc(struct __pyx
   /* "ctools/ccctest.pyx":13
  *         self.time_queue = new priority_queue[double]()
  * 
- *     def __dealloc(self):             # <<<<<<<<<<<<<<
+ *     def __dealloc__(self):             # <<<<<<<<<<<<<<
  *         del self.time_queue
  * 
  */
 
   /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
-  return __pyx_r;
 }
 
 /* "ctools/ccctest.pyx":16
@@ -1392,7 +1386,7 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_4add_simulation(struct 
  *     def add_simulation(self, double t):
  *         if t < self.cur_time:             # <<<<<<<<<<<<<<
  *             raise ValueError("you cannot travel to the past bro")
- *         self.time_queue.push(t)
+ *         self.time_queue.push(-t)
  */
   __pyx_t_1 = ((__pyx_v_t < __pyx_v_self->cur_time) != 0);
   if (unlikely(__pyx_t_1)) {
@@ -1401,7 +1395,7 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_4add_simulation(struct 
  *     def add_simulation(self, double t):
  *         if t < self.cur_time:
  *             raise ValueError("you cannot travel to the past bro")             # <<<<<<<<<<<<<<
- *         self.time_queue.push(t)
+ *         self.time_queue.push(-t)
  * 
  */
     __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 18, __pyx_L1_error)
@@ -1415,18 +1409,18 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_4add_simulation(struct 
  *     def add_simulation(self, double t):
  *         if t < self.cur_time:             # <<<<<<<<<<<<<<
  *             raise ValueError("you cannot travel to the past bro")
- *         self.time_queue.push(t)
+ *         self.time_queue.push(-t)
  */
   }
 
   /* "ctools/ccctest.pyx":19
  *         if t < self.cur_time:
  *             raise ValueError("you cannot travel to the past bro")
- *         self.time_queue.push(t)             # <<<<<<<<<<<<<<
+ *         self.time_queue.push(-t)             # <<<<<<<<<<<<<<
  * 
  *     def get_time_difference(self, double t):
  */
-  __pyx_v_self->time_queue->push(__pyx_v_t);
+  __pyx_v_self->time_queue->push((-__pyx_v_t));
 
   /* "ctools/ccctest.pyx":16
  *         del self.time_queue
@@ -1450,7 +1444,7 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_4add_simulation(struct 
 }
 
 /* "ctools/ccctest.pyx":21
- *         self.time_queue.push(t)
+ *         self.time_queue.push(-t)
  * 
  *     def get_time_difference(self, double t):             # <<<<<<<<<<<<<<
  *         if t < self.cur_time:
@@ -1526,7 +1520,7 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_6get_time_difference(st
  *             raise ValueError("you cannot travel to the past bro")
  *         if self.time_queue.empty():             # <<<<<<<<<<<<<<
  *             return t - self.cur_time
- *         cdef double top = self.time_queue.top()
+ *         cdef double top = -self.time_queue.top()
  */
   __pyx_t_1 = (__pyx_v_self->time_queue->empty() != 0);
   if (__pyx_t_1) {
@@ -1535,7 +1529,7 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_6get_time_difference(st
  *             raise ValueError("you cannot travel to the past bro")
  *         if self.time_queue.empty():
  *             return t - self.cur_time             # <<<<<<<<<<<<<<
- *         cdef double top = self.time_queue.top()
+ *         cdef double top = -self.time_queue.top()
  *         return t - self.cur_time if t < top else t - top
  */
     __Pyx_XDECREF(__pyx_r);
@@ -1550,22 +1544,22 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_6get_time_difference(st
  *             raise ValueError("you cannot travel to the past bro")
  *         if self.time_queue.empty():             # <<<<<<<<<<<<<<
  *             return t - self.cur_time
- *         cdef double top = self.time_queue.top()
+ *         cdef double top = -self.time_queue.top()
  */
   }
 
   /* "ctools/ccctest.pyx":26
  *         if self.time_queue.empty():
  *             return t - self.cur_time
- *         cdef double top = self.time_queue.top()             # <<<<<<<<<<<<<<
+ *         cdef double top = -self.time_queue.top()             # <<<<<<<<<<<<<<
  *         return t - self.cur_time if t < top else t - top
  * 
  */
-  __pyx_v_top = __pyx_v_self->time_queue->top();
+  __pyx_v_top = (-__pyx_v_self->time_queue->top());
 
   /* "ctools/ccctest.pyx":27
  *             return t - self.cur_time
- *         cdef double top = self.time_queue.top()
+ *         cdef double top = -self.time_queue.top()
  *         return t - self.cur_time if t < top else t - top             # <<<<<<<<<<<<<<
  * 
  *     def update(self, double t):
@@ -1587,7 +1581,7 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_6get_time_difference(st
   goto __pyx_L0;
 
   /* "ctools/ccctest.pyx":21
- *         self.time_queue.push(t)
+ *         self.time_queue.push(-t)
  * 
  *     def get_time_difference(self, double t):             # <<<<<<<<<<<<<<
  *         if t < self.cur_time:
@@ -1681,7 +1675,7 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_8update(struct __pyx_ob
  *             raise ValueError("you cannot travel to the past bro")
  *         cdef double top
  *         if not self.time_queue.empty():             # <<<<<<<<<<<<<<
- *             top = self.time_queue.top()
+ *             top = -self.time_queue.top()
  *             if t >= top:
  */
   __pyx_t_1 = ((!(__pyx_v_self->time_queue->empty() != 0)) != 0);
@@ -1690,15 +1684,15 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_8update(struct __pyx_ob
     /* "ctools/ccctest.pyx":34
  *         cdef double top
  *         if not self.time_queue.empty():
- *             top = self.time_queue.top()             # <<<<<<<<<<<<<<
+ *             top = -self.time_queue.top()             # <<<<<<<<<<<<<<
  *             if t >= top:
  *                 self.time_queue.pop()
  */
-    __pyx_v_top = __pyx_v_self->time_queue->top();
+    __pyx_v_top = (-__pyx_v_self->time_queue->top());
 
     /* "ctools/ccctest.pyx":35
  *         if not self.time_queue.empty():
- *             top = self.time_queue.top()
+ *             top = -self.time_queue.top()
  *             if t >= top:             # <<<<<<<<<<<<<<
  *                 self.time_queue.pop()
  *                 self.cur_time = top
@@ -1707,7 +1701,7 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_8update(struct __pyx_ob
     if (__pyx_t_1) {
 
       /* "ctools/ccctest.pyx":36
- *             top = self.time_queue.top()
+ *             top = -self.time_queue.top()
  *             if t >= top:
  *                 self.time_queue.pop()             # <<<<<<<<<<<<<<
  *                 self.cur_time = top
@@ -1723,7 +1717,7 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_8update(struct __pyx_ob
 
       /* "ctools/ccctest.pyx":35
  *         if not self.time_queue.empty():
- *             top = self.time_queue.top()
+ *             top = -self.time_queue.top()
  *             if t >= top:             # <<<<<<<<<<<<<<
  *                 self.time_queue.pop()
  *                 self.cur_time = top
@@ -1734,7 +1728,7 @@ static PyObject *__pyx_pf_6ctools_7ccctest_11TimeManager_8update(struct __pyx_ob
  *             raise ValueError("you cannot travel to the past bro")
  *         cdef double top
  *         if not self.time_queue.empty():             # <<<<<<<<<<<<<<
- *             top = self.time_queue.top()
+ *             top = -self.time_queue.top()
  *             if t >= top:
  */
   }
@@ -1888,11 +1882,18 @@ static void __pyx_tp_dealloc_6ctools_7ccctest_TimeManager(PyObject *o) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
   }
   #endif
+  {
+    PyObject *etype, *eval, *etb;
+    PyErr_Fetch(&etype, &eval, &etb);
+    ++Py_REFCNT(o);
+    __pyx_pw_6ctools_7ccctest_11TimeManager_3__dealloc__(o);
+    --Py_REFCNT(o);
+    PyErr_Restore(etype, eval, etb);
+  }
   (*Py_TYPE(o)->tp_free)(o);
 }
 
 static PyMethodDef __pyx_methods_6ctools_7ccctest_TimeManager[] = {
-  {"__dealloc", (PyCFunction)__pyx_pw_6ctools_7ccctest_11TimeManager_3__dealloc, METH_NOARGS, 0},
   {"add_simulation", (PyCFunction)__pyx_pw_6ctools_7ccctest_11TimeManager_5add_simulation, METH_O, 0},
   {"get_time_difference", (PyCFunction)__pyx_pw_6ctools_7ccctest_11TimeManager_7get_time_difference, METH_O, 0},
   {"update", (PyCFunction)__pyx_pw_6ctools_7ccctest_11TimeManager_9update, METH_O, 0},
@@ -2042,7 +2043,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *     def add_simulation(self, double t):
  *         if t < self.cur_time:
  *             raise ValueError("you cannot travel to the past bro")             # <<<<<<<<<<<<<<
- *         self.time_queue.push(t)
+ *         self.time_queue.push(-t)
  * 
  */
   __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_s_you_cannot_travel_to_the_past_br); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 18, __pyx_L1_error)

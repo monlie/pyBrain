@@ -7,17 +7,19 @@ from ctools import TimeManager
 Observer Pattern: treat synapses as observers, and presynaptic neurons as subjects.
 REMEMBER: SUBJECTS MUST BE PRE-NEURONS!
 """
+
+
 class ChemicalSynapse(Recordable):
 
     # formulas could be seen on: https://www.ncbi.nlm.nih.gov/pubmed/15142958
-    def __init__(self, preneuron, ampa, nmda):
+    def __init__(self, preneuron, ampa, nmda, delay=0.0):
         super(ChemicalSynapse, self).__init__()
 
         self.preneuron = preneuron
         self.g_ampa = ampa
         self.g_nmda = nmda
         self.time_manager = TimeManager()
-        self.delay = 0.0
+        self.delay = delay
 
     """
     Receptors could be further abstracted as classes, but at the same time 
