@@ -41,6 +41,10 @@ class Neuron(Recordable):
         self.postsynapses.append(syn)
         post_neuron.presynapses.append(syn)
 
+    def update_synapses(self, t):
+        for syn in self.presynapses:
+            syn.time_manager.update(t)
+
 
 class IzhikevichNeuron(Neuron):
     
@@ -95,9 +99,3 @@ class NeuronFactory(object):
         paras = cls._neurons.get(ntype)
         if ntype is not None:
             return IzhikevichNeuron(stimulation=stim, **paras)
-
-
-class PoissonEncoder(object):
-
-    def __init__(self):
-        super().__init__()

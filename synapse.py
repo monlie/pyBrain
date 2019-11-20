@@ -1,7 +1,7 @@
 import numpy as np
 from math import exp
 from oscilloscope import Recordable
-from queue import PriorityQueue
+from ctools.ccctest import TimeManager
 
 
 """
@@ -17,8 +17,8 @@ class ChemicalSynapse(Recordable):
         self.preneuron = preneuron
         self.g_ampa = ampa
         self.g_nmda = nmda
-        self.final_spike_time = -200.0
-        self.spike_time_queue = PriorityQueue()
+        self.time_manager = TimeManager()
+        self.delay = 0.0
 
     """
     Receptors could be further abstracted as classes, but at the same time 
@@ -26,7 +26,7 @@ class ChemicalSynapse(Recordable):
     loop unwinding automatically, which leads me to hard code them on the current term. 
     """
     def get_current(self, t, v):
-        t = t - self.final_spike_time
+        t = self.time_manager.get_time_difference(t)
         g_ampa = self.g_ampa * exp(-t * 0.2)    # g' = -g / 5
         g_nmda = self.g_nmda * exp(-t * 0.006667)  # g' = -g / 150
         current = g_ampa * v        # g_ampa (v - 0)
@@ -36,5 +36,5 @@ class ChemicalSynapse(Recordable):
         return current
 
     def simulate(self, t):
-        self.final_spike_time = t
+        self.time_manager.add_simulation(t + self.delay)
         self.record_to_oscilloscopes(t)
