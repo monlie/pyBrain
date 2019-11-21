@@ -39,10 +39,14 @@ class Neuron(Recordable):
         self.postsynapses.append(syn)
         post_neuron.presynapses.append(syn)
 
-    def update(self, status, t):
+    def update(self, status, t, is_over_threshold):
         self.status = status
         for syn in self.presynapses:
             syn.time_manager.update(t)
+        self.record_to_oscilloscopes(t)
+        if is_over_threshold:
+            self.reset()
+            self.fire(t)
 
 
 class IzhikevichNeuron(Neuron):

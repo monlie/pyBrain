@@ -36,14 +36,13 @@ class Integrator(object):
             dt = self.time_step
             x = self.one_step_rk45(self.neurons, self.neurons.status, t, dt)
 
+            # search the precise time of spiking
             is_over_threshold = self.neurons.is_over_threshold(x[0])
             if is_over_threshold:
                 x, dt = self.search_t(self.neurons, t, 0, dt)
             t += dt
-            self.neurons.update(x, t)
-            self.neurons.record_to_oscilloscopes(t)     # Observer Pattern: treat oscilloscopes as observers
-            if is_over_threshold:
-                self.neurons.reset()
+
+            self.neurons.update(x, t, is_over_threshold)
 
 
 # just exists for teeeeeeest
@@ -52,6 +51,7 @@ class EulerIntegrator(Integrator):
     def __init__(self, neu, ts=0.05):
         super().__init__(neu, ts=ts)
 
+    # override
     @staticmethod
     def one_step_rk45(neu, x, t, dt):
         return x + dt * neu.dynamic_equ(t, x)
