@@ -39,11 +39,9 @@ class Integrator(object):
             is_over_threshold = self.neurons.is_over_threshold(x[0])
             if is_over_threshold:
                 x, dt = self.search_t(self.neurons, t, 0, dt)
-            self.neurons.status = x
             t += dt
-            self.neurons.update_synapses(t)
+            self.neurons.update(x, t)
             self.neurons.record_to_oscilloscopes(t)     # Observer Pattern: treat oscilloscopes as observers
-
             if is_over_threshold:
                 self.neurons.reset()
 

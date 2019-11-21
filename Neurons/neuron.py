@@ -39,7 +39,8 @@ class Neuron(Recordable):
         self.postsynapses.append(syn)
         post_neuron.presynapses.append(syn)
 
-    def update_synapses(self, t):
+    def update(self, status, t):
+        self.status = status
         for syn in self.presynapses:
             syn.time_manager.update(t)
 
