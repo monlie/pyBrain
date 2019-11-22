@@ -1,3 +1,5 @@
+from network import Encoder
+
 class Integrator(object):
 
     def __init__(self, neu, ts=5e-2):
@@ -26,23 +28,28 @@ class Integrator(object):
             return cls.search_t(neu, t, dt, rdt)
         return x, dt
 
-    def integrate(self, steps=1000, callback=None):
+    def integrate(self, time_range=400, callback=None):
         t = 0.0
         dt = self.time_step
 
-        for _ in range(steps):
-            if callback is not None:
-                callback(self.neurons, t, dt)                   # presynaptic spiking
-            dt = self.time_step
-            x = self.one_step_rk45(self.neurons, self.neurons.status, t, dt)
+        while t < time_range:
+            for neu in self.neurons:
+                if isinstance(neu, Encoder):
+                    if neu.is_over_threshold(self.time_step):
+                        neu.fire(t + self.time_step)
+                    continue
+                if callback is not None:
+                    callback(neu, t, dt)                   # presynaptic spiking
+                dt = self.time_step
+                x = self.one_step_rk45(neu, neu.status, t, dt)
 
-            # search the precise time of spiking
-            is_over_threshold = self.neurons.is_over_threshold(x[0])
-            if is_over_threshold:
-                x, dt = self.search_t(self.neurons, t, 0, dt)
-            t += dt
-
-            self.neurons.update(x, t, is_over_threshold)
+                # search the precise time of spiking
+                is_over_threshold = neu.is_over_threshold(x[0])
+                if is_over_threshold:
+                    x, dt = self.search_t(neu, t, 0, dt)
+                # TODO: fire should not be ...
+                neu.update(x, t + dt, is_over_threshold)
+            t += self.time_step
 
 
 # just exists for teeeeeeest
