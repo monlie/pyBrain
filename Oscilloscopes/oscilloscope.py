@@ -32,12 +32,12 @@ class Oscilloscope(object):
     def get_sample(self):
         return list(zip(*self.sample))
 
-    def display(self, fig, **keyargs):
+    def display(self, ax, **keyargs):
         sample = self.get_sample()
         if sample:
             t, x = sample
-            plt.plot(t, x, **keyargs)
-        return fig
+            ax.plot(t, x, **keyargs)
+        return ax
 
     
 class VoltageOscilloscope(Oscilloscope):
@@ -45,12 +45,12 @@ class VoltageOscilloscope(Oscilloscope):
     def sampling(self, t):
         self.sample.append((t, self.target.status[0]))
 
-    # override
-    def display(self, fig, **keyargs):
-        fig = super(VoltageOscilloscope, self).display(fig, **keyargs)
-        plt.xlabel(r"$t\ [ms]$")
-        plt.ylabel(r"$V\ [mV]$")
-        return fig
+    # # override
+    # def display(self, fig, **keyargs):
+    #     fig = super(VoltageOscilloscope, self).display(fig, **keyargs)
+    #     plt.xlabel(r"$t\ [ms]$")
+    #     plt.ylabel(r"$V\ [mV]$")
+    #     return fig
 
 
 class SpikingOscilloscope(Oscilloscope):
@@ -59,11 +59,11 @@ class SpikingOscilloscope(Oscilloscope):
         self.sample.append((t, 30))
     
     # override
-    def display(self, fig, **keyargs):
+    def display(self, ax, **keyargs):
         sample = self.get_sample()
         if sample:
             t, x = sample
-            plt.scatter(t, x, **keyargs)
-            plt.xlabel(r"$t\ [ms]$")
-            plt.ylabel(r"$V\ [mV]$")
-        return fig
+            ax.scatter(t, x, **keyargs)
+            # plt.xlabel(r"$t\ [ms]$")
+            # plt.ylabel(r"$V\ [mV]$")
+        return ax

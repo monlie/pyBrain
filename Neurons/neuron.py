@@ -2,7 +2,7 @@ import numpy as np
 from Synapses import synapse
 from Oscilloscopes import Recordable
 
-
+# TODO: 脉冲事件队列应该由突触前神经元维护，而非像当前版本一样由突触维护！
 class Neuron(Recordable):
 
     def __init__(self, status=None, stimulation=None):
